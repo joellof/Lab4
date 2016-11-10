@@ -14,7 +14,7 @@ public class MyGrayProgram {
       return newSamples; 
     }//upDown
 
-   public static int[][] LeftRight(int[][] samples){
+   public static int[][] leftRight(int[][] samples){
       int[][] newSamples = new int[samples.length][samples[0].length];
       for(int row = 0; row < samples.length; row = row + 1) {
          for (int col = 0; col < samples[row].length; col = col + 1) {
@@ -22,7 +22,7 @@ public class MyGrayProgram {
          }
       }
       return newSamples;
-   }
+   }//leftRight
 
    public static int[][] invert(int[][] samples){
       int[][] newSamples = new int[samples.length][samples[0].length];
@@ -32,7 +32,7 @@ public class MyGrayProgram {
          }
       }
       return newSamples;
-   }
+   }//invert
 
    public static int[][] toBlackWhite(int[][] samples){
       int[][] newSamples = new int[samples.length][samples[0].length];
@@ -45,33 +45,50 @@ public class MyGrayProgram {
          }
       }
       return newSamples;
-   }
+   }//toBlackWhite
+
    public static int[][] contour(int[][] samples){
       int[][] newSamples = new int[samples.length][samples[0].length];
       for(int row = 0; row < samples.length; row = row + 1) {
          for (int col = 0; col < samples[row].length; col = col + 1) {
-            if (samples[row][col] < 128)
+            if (samples[row][col] < 128) {
                if (isOnFrame(row, col, samples))
                   newSamples[row][col] = 0;
+               else if(hasWhiteNeighbour(row, col, samples))
+                  newSamples[row][col] = 0;
+               else
+                  newSamples[row][col] = 255;
+            }
+            else
+               newSamples[row][col] = 255;
          }
       }
       return newSamples;
+   }//contour
 
-   }
-   public static boolean isOnFrame(int row, int col, int[][] sample){
+   public static boolean isOnFrame(int row, int col, int[][] samples){
 
-      if(row >= 1 || col >= 1 || row < sample.length || col < sample[0].length) {
+      if (row == 0 || col == 0 || row == (samples.length-1) || col == (samples[0].length-1))
+         return true;
+      else
+         return false;
+   }//isOnFrame
 
+   public static boolean hasWhiteNeighbour(int row, int col, int[][] samples){
 
-         if (sample[row - 1][col] >= 128 || sample[row + 1][col] >= 128
-                 || sample[row][col - 1] >= 128 || sample[row][col + 1] >= 128)
+      if(samples.length > row && row >= 1 || col >= 1 && col < samples[0].length) {
+
+         if (samples[row - 1][col] >= 128 || samples[row + 1][col] >= 128
+                 || samples[row][col - 1] >= 128 || samples[row][col + 1] >= 128
+                 || samples[row - 1][col - 1] >= 128 || samples[row + 1][col + 1] >= 128
+                 || samples[row + 1][col - 1] >= 128 || samples[row - 1][col + 1] >= 128)
             return true;
          else
             return false;
       }
-      else if (row == 0 || col == 0 || row == sample.length || col == sample[0].length)
-         return true;
       else
          return false;
-   }
+   }//hasWhiteNeighbour
+
 }//MyGrayProgram
+
